@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
+        <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="web3.js"></script>
+        <script type="text/javascript">
+
+            let dexAddress = '';
+            let tokenAAddress = '';
+            let tokenBAddress = '';
+            let tokenDecimals = 18;
+            let abi = [
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "name",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_upgradedAddress",
+				"type": "address"
+			}
+		],
+		"name": "deprecate",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_spender",
+				"type": "address"
+			},
+			{
+				"name": "_value",
+				"type": "uint256"
+			}
+		],
+		"name": "approve",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "deprecated",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_evilUser",
+				"type": "address"
+			}
+		],
+		"name": "addBlackList",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "totalSupply",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_from",
+				"type": "address"
+			},
+			{
+				"name": "_to",
+				"type": "address"
+			},
+			{
+				"name": "_value",
+				"type": "uint256"
+			}
+		],
+		"name": "transferFrom",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "upgradedAddress",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "balances",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "decimals",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "maximumFee",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "_totalSupply",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "unpause",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_maker",
+				"type": "address"
+			}
+		],
+		"name": "getBlackListStatus",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "allowed",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "paused",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "who",
+				"type": "address"
+			}
+		],
+		"name": "balanceOf",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "pause",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getOwner",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "symbol",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_to",
+				"type": "address"
+			},
+			{
+				"name": "_value",
+				"type": "uint256"
+			}
+		],
+		"name": "transfer",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "newBasisPoints",
+				"type": "uint256"
+			},
+			{
+				"name": "newMaxFee",
+				"type": "uint256"
+			}
+		],
+		"name": "setParams",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "issue",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "redeem",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_owner",
+				"type": "address"
+			},
+			{
+				"name": "_spender",
+				"type": "address"
+			}
+		],
+		"name": "allowance",
+		"outputs": [
+			{
+				"name": "remaining",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "basisPointsRate",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "isBlackListed",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_clearedUser",
+				"type": "address"
+			}
+		],
+		"name": "removeBlackList",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "MAX_UINT",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "transferOwnership",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_blackListedUser",
+				"type": "address"
+			}
+		],
+		"name": "destroyBlackFunds",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"name": "_initialSupply",
+				"type": "uint256"
+			},
+			{
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"name": "_symbol",
+				"type": "string"
+			},
+			{
+				"name": "_decimals",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "Issue",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "Redeem",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "newAddress",
+				"type": "address"
+			}
+		],
+		"name": "Deprecate",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "feeBasisPoints",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "maxFee",
+				"type": "uint256"
+			}
+		],
+		"name": "Params",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "_blackListedUser",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "_balance",
+				"type": "uint256"
+			}
+		],
+		"name": "DestroyedBlackFunds",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "_user",
+				"type": "address"
+			}
+		],
+		"name": "AddedBlackList",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "_user",
+				"type": "address"
+			}
+		],
+		"name": "RemovedBlackList",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"name": "spender",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "value",
+				"type": "uint256"
+			}
+		],
+		"name": "Approval",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "value",
+				"type": "uint256"
+			}
+		],
+		"name": "Transfer",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [],
+		"name": "Pause",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [],
+		"name": "Unpause",
+		"type": "event"
+	}
+]
+
+            let network = "";
+            let userAccount = '';
+            let warning = "";
+        </script>
+        <script type="text/javascript">
+          window.addEventListener('load', function() {
+
+              // Modern dapp browsers...
+              if (window.ethereum) {
+                  web3 = new Web3(ethereum);
+
+                  try { 
+                    // Request account access if needed
+                    ethereum.enable().then(result => {
+                      // Now you can start your app & access web3 freely:
+                      startApp()
+                    })
+                  }
+                  catch(err) {
+                    console.log(err);
+                  }
+              }
+              // Legacy dapp browsers, checking if Web3 has been injected by the browser (Mist/MetaMask)
+              else if (typeof web3 !== 'undefined') {
+                // Use Mist/MetaMask's provider
+                web3 = new Web3(web3.currentProvider);
+
+                // Now you can start your app & access web3 freely:
+                startApp();
+
+              } else {
+                console.log('No web3? You should consider trying MetaMask!')
+                // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
+                web3 = new Web3( new Web3.providers.HttpProvider( "https://1rpc.io/sepolia" ));
+
+                // Now you can start your app & access web3 freely:
+                startApp();
+              }
+            })
+        
+            
+            // Get current network
+            function startApp() {
+                web3.eth.net.getId().then(netId => {
+                // web3.version.getNetwork((err, netId) => {
+                  console.log('netId: ' + netId)
+                  switch (netId) {
+                    case 1:
+                        network = 'Mainnet';
+                        warning = 'please switch your network to Sepolia';
+                      break
+                    case 11155111:
+                        network = 'Sepolia';
+                        networkDisplay = 'Sepolia';
+                        dexAddress = '0x0f1BD6B919F6140c39a4F532eeF063E83d4E8a72';
+                        tokenAAddress = '0x62bb938Df3E6fb908cAb58c0A9702943720Ab483';
+                        tokenBAddress = "0xac997CF3D6a95Ffa095C7D480917CAbF8b270A80";
+                        explorerUrl = "https://" + network.toLowerCase() + ".etherscan.io/tx/"
+                        break
+                    default:
+                        network = 'Unknown';
+                        warning = 'please switch your network to Sepolia';
+                  }
+                  $("#eth_network").text(network);
+                  $("#warning").text(warning);
+                  
+                  web3.eth.getAccounts().then(accounts => {
+                    userAccount = accounts[0];
+                    $("#eth_address").text(userAccount);
+                    $("#fromAddress").val(userAccount);
+
+                    reloadInfo();
+                  })
+                })
+            }
+            
+            async function reloadInfo() {
+
+                // Wallet
+                try { 
+                    //////////////////
+                    // Load Token A //
+                    //////////////////
+                    let tokenA = new web3.eth.Contract(abi, tokenAAddress)
+                    console.log('tokenA', tokenA)
+
+                    const symbol = await tokenA.methods.symbol().call();
+                    $("#token_name").html(symbol);
+
+                    // Get balance
+                    let balance = await tokenA.methods.balanceOf(userAccount).call();
+                    console.log('balance', balance.toString());
+
+                    const decimals = await tokenA.methods.decimals().call();
+                    console.log('decimals', decimals.toString())
+                    tokenDecimals = decimals
+                    $("#token_decimals").html('( decimals: ' + tokenDecimals + ' )')
+
+                    balance = balance / (10**decimals)
+                    console.log(balance.toString())
+                    $("#token_balance").html(balance)
+
+                    $("#token_address").html(tokenAAddress)
+
+                    //////////////////
+                    // Load Token B //
+                    //////////////////
+                    let tokenB = new web3.eth.Contract(abi, tokenBAddress)
+                    console.log('tokenB', tokenB)
+
+                    const symbolB = await tokenB.methods.symbol().call();
+                    $("#token2_name").html(symbolB);
+
+                    // Get balance
+                    let balanceB = await tokenB.methods.balanceOf(userAccount).call();
+                    console.log('balance2', balanceB.toString());
+
+                    const decimalsB = await tokenB.methods.decimals().call();
+                    console.log('decimals', decimalsB.toString())
+                    tokenDecimals = decimalsB
+                    $("#token2_decimals").html('( decimals: ' + tokenDecimals + ' )')
+
+                    balanceB = balanceB / (10**decimalsB)
+                    console.log(balanceB.toString())
+                    $("#token2_balance").html(balanceB)
+
+                    $("#token2_address").html(tokenBAddress)
+
+                    /////////
+                    // Dex //
+                    /////////
+
+                    let dexBalanceA = await tokenA.methods.balanceOf(dexAddress).call();
+                    $("#dex_token1_balance").html(dexBalanceA / (10**decimals))
+
+                    let dexBalanceB = await tokenB.methods.balanceOf(dexAddress).call();
+                    $("#dex_token2_balance").html(dexBalanceA / (10**decimalsB))
+                }
+                catch(err) {
+                    console.log(err);
+                }
+            }
+        </script>
+        
+        <!-- Ether transfer -->
+        <script type="text/javascript">
+            function tokenTransfer() {
+              let toAddress = $("#toAddress").val()
+              let amountInText = $("#amount").val()
+
+              console.log('toAddress: ' + toAddress)
+              console.log('amountInText: ' + amountInText)
+
+              let sender = userAccount;
+              let amount = web3.utils.toBN(amountInText) * (10 ** tokenDecimals)
+
+              let option = {
+                from: sender
+              }
+              let contract = new web3.eth.Contract(abi, tokenAAddress)
+              console.log('contract', contract)
+
+              contract.methods.transfer(toAddress, amount).send(option)
+              // web3.eth.sendTransaction(
+              //   {
+              //     from: sender,
+              //     to: toAddress,
+              //     value: amount
+              //   }
+              // )
+              .on('error', (error) => { 
+                console.error(error) 
+                $("#status_value").text('Failed').css("color", "red");
+              })
+
+              // Transaction already saved to mempool
+              .on('transactionHash', (transactionHash) => { 
+                // Show tx hash
+                console.log(transactionHash)
+                let link = "https://" + network.toLowerCase() + ".etherscan.io/tx/" + transactionHash
+                $("#tx_link").attr("href", link)
+                $("#tx_link").text(link)
+
+                // Clear status
+                $("#status_value").text('pending...');
+              })
+
+              // Transaction got confirmed
+              .on('confirmation', (confirmationNumber, receipt) => {
+                  console.log('confirmationNumber', confirmationNumber)
+                  console.log(receipt);
+                  $("#status_value").text('Success').css("color", "green");
+
+                  callback(ok);
+              })
+            }
+
+            function openContractOnEtherScan() {
+              let url = 'https://' + network + '.etherscan.io/token/' + tokenAAddress
+              window.open(url,'_blank');
+            }
+            
+            function openUserAddressOnEtherScan() {
+              let url = 'https://' + network  + '.etherscan.io/address/' + userAccount
+              window.open(url,'_blank');
+            }
+        </script>
+      
+        <style type="text/css">
+          .p_network {
+              border: 4px solid;
+              border-radius: 10px;
+              padding: 10px;
+              border-color: #2196F3;
+              text-align: center;
+              width: 11em;
+              margin: auto;
+              margin-top: 20px;
+          }
+          .p_warning {
+              padding: 10px;
+              text-align: center;
+              margin: auto;
+              color: red;
+          }
+
+          .title {
+              text-align: center;
+              margin: auto;
+              margin-top: 9px;
+              margin-bottom: 20px;
+          }
+          
+          table.info tr {
+              line-height: 2em;
+          }
+          
+          table.info .table-label {
+              width: 10em;
+              margin-right: 20px;
+              font-weight: bold;
+          }
+
+          table.info .table-value {
+            word-break: break-all;
+          }
+        </style>
+    </head>
+    <body>
+        <section class="hero is-primary">
+          <div class="hero-body">
+            <div class="container">
+              <h1 class="title">
+                Token Transfer
+              </h1>
+            </div>
+          </div>
+        </section>
+        <p class="p_network">
+            <span>Network: </span>
+            <span id="eth_network"></span>
+        </p>
+        <p class="p_warning">
+          <span id="warning"></span>
+        </p>
+        
+        <!-- Dex --> 
+        <div class="tile is-ancestor" style="margin-left: 10px; margin-right: 10px;">
+          <div class="tile is-parent">
+            <article class="tile is-child box notification is-info">
+              <p class="title">Swap</p>
+                <div class="field">
+                  <label class="label">From</label>
+                  <div class="control">
+                    <input id="fromAddress" class="input" type="text" placeholder="from address" value="A">
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label class="label">To</label>
+                  <div class="control">
+                    <input id="toAddress" class="input" type="text" placeholder="to address" value="B">
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label class="label">Amount</label>
+                  <div class="control">
+                    <input id="amount" class="input" type="text" placeholder="amount to transfer" value="10">
+                  </div>
+                </div>
+
+                <div class="field is-grouped">
+                  <div class="control">
+                    <button class="button is-link" onclick="javascript:tokenTransfer()">Swap</button>
+                  </div>
+                </div>
+              </p>
+            </article>
+          </div>
+          <div class="tile is-parent">
+            <article class="tile is-child box notification is-info">
+              <p class="title">Token A</p>
+              <table class="info">
+                <tbody>
+                  <tr>
+                    <td class="table-label">account:</td>
+                    <td class="table-value">
+                      <span id="eth_address"></span>
+                      <a href="javascript:openUserAddressOnEtherScan();" style="margin-left: 8px;">
+                        <i class="fas fa-lg fa-external-link-alt"></i>
+                      </a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="table-label">token:</td>
+                    <td class="table-value">
+                      <span id="token_name">[[ name ]]</span>
+                      <span id="token_decimals">[[ decimals ]]</span>
+                      <a href="javascript:openContractOnEtherScan();" style="margin-left: 8px;">
+                        <i class="fas fa-lg fa-external-link-alt"></i>
+                      </a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="table-label">token balance:</td>
+                    <td class="table-value"><span id="token_balance">[[ balance ]]</span></td>
+                  </tr>
+                  <tr>
+                    <td class="table-label">token address:</td>
+                    <td class="table-value">
+                      <span id="token_address">[[ contract address ]]</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </article>
+          </div>
+          <div class="tile is-parent">
+            <article class="tile is-child box notification is-info">
+              <p class="title">Token B</p>
+              <table class="info">
+                <tbody>
+                  <tr>
+                    <td class="table-label">token:</td>
+                    <td class="table-value">
+                      <span id="token2_name">[[ name ]]</span>
+                      <span id="token2_decimals">[[ decimals ]]</span>
+                      <a href="javascript:openContractOnEtherScan();" style="margin-left: 8px;">
+                        <i class="fas fa-lg fa-external-link-alt"></i>
+                      </a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="table-label">token balance:</td>
+                    <td class="table-value"><span id="token2_balance">[[ balance ]]</span></td>
+                  </tr>
+                  <tr>
+                    <td class="table-label">token address:</td>
+                    <td class="table-value">
+                      <span id="token2_address">[[ contract address ]]</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </article>
+          </div>
+          <div class="tile is-parent">
+            <article class="tile is-child box notification is-info">
+              <p class="title">Dex</p>
+              <table class="info">
+                <tbody>
+                  <tr>
+                    <td class="table-label">Token A:</td>
+                    <td class="table-value"><span id="dex_token1_balance">[[ balance ]]</span></td>
+                  </tr>
+                  <tr>
+                    <td class="table-label">Token B:</td>
+                    <td class="table-value">
+                      <span id="dex_token2_balance">[[ balance ]]</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </article>
+          </div>
+        </div>
+
+        <div style="clear:both;">
+            
+        </div>
+
+        <div id="transaction">
+          <p>
+            <span>Your pending transaction: </span>
+            <span>
+              <a id="tx_link" target="_blank" href="">-</a>
+            </span>
+          </p>
+          <p>
+              <span>Status: </span>
+              <span id="status_value">
+                -
+              </span>
+            </p>
+        </div>
+
+        <footer class="footer">
+          <div class="content has-text-centered">
+            <p>
+              Open source on <a href="https://github.com/totiz/ETHPadThaiWorkshop">Github</a>
+            </p>
+          </div>
+        </footer>
+        
+    </body>
+</html>
