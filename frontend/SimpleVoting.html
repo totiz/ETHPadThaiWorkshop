@@ -250,18 +250,18 @@
             }
             
             // Get account balance
-            function getBalance() {
-              web3.eth.getBalance(userAccount).then(result => {
-                  $("#balance").html(web3.utils.fromWei(result));
-              }); // getbalance account
+            async function getBalance() {
+                let balance = await web3.eth.getBalance(userAccount)
+                $("#balance").html(web3.utils.fromWei(balance));
             }
             
             // Get candidate name
-            function showCandidateCount() {
-                getCandidateCount( function (number) {
-                    console.log(number) ;
-                    $("#candidateCount").text(number);
-                } );
+            async function showCandidateCount() {
+                let contract = getVotingContract();
+                let number = await contract.methods.candidateCount().call()
+                
+                console.log(number) ;
+                $("#candidateCount").text(number);
             }
 
             // Get candidate token contract
@@ -275,41 +275,46 @@
         <!-- Candidate contract -->
         <script type="text/javascript">
             // Get number of candidates
-            function getCandidateCount( callback ) {
+            async function getCandidateCount( callback ) {
                 let contract = getVotingContract();
-                contract.methods.candidateCount().call().then( result => { 
-                    console.log('getCandidateCount: ' + result) ;
-                    callback(result);
-                } );
+                return contract.methods.candidateCount().call();
+                // let contract = getVotingContract();
+                // contract.methods.candidateCount().call().then( result => { 
+                //     console.log('getCandidateCount: ' + result) ;
+                //     callback(result);
+                // } );
             }
             
             // Get Candidate name
-            function getCandidateName(index, callback) {
+            async function getCandidateName(index) {
                 let contract = getVotingContract();
-                contract.methods.candidateList(index).call().then( name => { 
-                    console.log(name);
-                    callback(name);
-                } );
+                return contract.methods.candidateList(index).call()
+                // contract.methods.candidateList(index).call().then( name => { 
+                //     console.log(name);
+                //     callback(name);
+                // } );
             }
 
             // Get Candidate total vote
-            function getCandidateTotalVote(index, callback) {
+            async function getCandidateTotalVote(index) {
                 let contract = getVotingContract();
-                contract.methods.candidateList(index).call().then( name => { 
-                    contract.methods.totalVotesFor(name).call().then( ok => { 
-                        console.log(ok);
-                        callback(ok);
-                    });
-                });
-                
+                let name = await contract.methods.candidateList(index).call()
+                return contract.methods.totalVotesFor(name).call()
+                // contract.methods.candidateList(index).call().then( name => { 
+                //     contract.methods.totalVotesFor(name).call().then( ok => { 
+                //         console.log(ok);
+                //         callback(ok);
+                //     });
+                // });
             }
             
             // Vote
-            function voteAt(index) {
+            async function voteAt(index) {
                 console.log('index', index);
 
                 let contract = getVotingContract();
-                contract.methods.candidateList(index).call().then( name => { 
+                let name = await contract.methods.candidateList(index).call()
+                // contract.methods.candidateList(index).call().then( name => { 
                     let options = {
                         from: userAccount
                     }
@@ -354,20 +359,19 @@
 
                         callback(ok);
                     })
-                });
+                // });
             }
             
             // Load candidate detail
-            function displayCandidateDetail(index) {
+            async function displayCandidateDetail(index) {
                 // Name
-                getCandidateName(index, function(name) {
-                    $("#candidate_" + index + "_name").text(name);
-                });
+                let name = await getCandidateName(index);
+                $("#candidate_" + index + "_name").text(name);
                 
                 // Total vote
-                getCandidateTotalVote(index, function(total) {
+                let total = await getCandidateTotalVote(index)
                     $("#candidate_" + index + "_total_vote").text(total);
-                });
+                // });
             }
             
             function cloneCandidateDetail(index) {
@@ -382,13 +386,12 @@
             }
             
             // Show candidates information
-            function displayCandidates() {
-                getCandidateCount( function (count) {
-                    for (var i = 0; i < count; i++) {
-                        cloneCandidateDetail(i);
-                        displayCandidateDetail(i);
-                    }
-                });
+            async function displayCandidates() {
+                const count = await getCandidateCount();
+                for (var i = 0; i < count; i++) {
+                    cloneCandidateDetail(i);
+                    displayCandidateDetail(i);
+                }
             }
 
             function reloadCandidateContract() {
